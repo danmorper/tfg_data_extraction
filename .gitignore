@@ -11,3 +11,8 @@ __pycache__/
 
 # Ignore xml_departamento_id_fecha.json
 xml_departamento_id_fecha.json
+
+
+# My tests
+pdfs_range_08-2012
+xml_id_fecha_filtered_08-2012.json
