@@ -33,7 +33,7 @@ def filter_pdfs_by_pattern(pattern, source_folder, target_folder):
             if matches:
                 # Print matched files and the found text
                 print(f'{file}: {matches}')
-                # Copy to target folder
-                shutil.copy(full_path, os.path.join(target_folder, file))
+                # move to target folder
+                shutil.move(full_path, os.path.join(target_folder, file))
                 filtered_files.append(file)
     return filtered_files

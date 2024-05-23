@@ -1,4 +1,4 @@
-Let's procede with the data extraction. We have the file `xml_departamento_id_fecha.json` which is a list of dictionaries with this structure:
+Let's proceed with the data extraction. We have the file `xml_departamento_id_fecha.json`, which is a list of dictionaries with the following structure:
 
 ```python
 {
@@ -10,7 +10,7 @@ Let's procede with the data extraction. We have the file `xml_departamento_id_fe
                 "items": [
                     [
                         "id",
-                        "part of the url, for example: /boe/dias/2012/10/02/pdfs/BOE-A-2012-12290.pdf"
+                        "part of the URL, for example: /boe/dias/2012/10/02/pdfs/BOE-A-2012-12290.pdf"
                     ],
                     [
                         ...
@@ -18,13 +18,15 @@ Let's procede with the data extraction. We have the file `xml_departamento_id_fe
                 ]
             }
         ]
-    },
+    }
+
 ```
 
-Let's proceed downloading the desired pdfs. 
+Now, let's proceed with downloading the desired PDFs.
+
 
 # Download pdfs
-In `download/download.py` we define a class Download.
+In `download/download.py`, we define a class `Download` with the following attributes:
 - Atributes
     1. start_date
     2. end_date
@@ -35,9 +37,11 @@ In `download/download.py` we define a class Download.
     - list_download(self): Generates a list of URLs to download based on the filtered data.
     - download_data(self): Downloads the PDFs from the generated URLs and saves them to the appropriate folder.
 
-We save start_date,end_date,number_requests,number_pdfs,time (in seconds),execution_date in `download_time.csv` to keep track of every downloaded month.
+We save `start_date`, `end_date`, `number_requests`, `number_pdfs`, `time` (in seconds), and `execution_date` in `download_time.csv` to keep track of every downloaded month.
 
-**IMPORTANT TO ASSURE THAT `download_time.csv` ONLY CONTAINS THE FOLLOWING TEXT**
+**IMPORTANT TO ENSURE THAT `download_time.csv` ONLY CONTAINS THE FOLLOWING TEXT**
+The rows are added with `\n` at the beggining.
 ```csv
 start_date,end_date,number_requests,number_pdfs,time,execution_date
 ```
+
