@@ -38,6 +38,7 @@ class CLassifier:
         # Create target directory if it does not exist
         if not os.path.exists(self.target_folder):
             os.makedirs(self.target_folder)
+            print(f'Created target folder: {self.target_folder}')
 
         filtered_files = []
         for file in os.listdir(self.source_folder):
@@ -46,8 +47,6 @@ class CLassifier:
                 text = self.read_pdf(full_path)
                 matches = self.filter_text(text, pattern)
                 if matches:
-                    # Print matched files and the found text
-                    print(f'{file}: {matches}')
                     # move to target folder
                     shutil.move(full_path, os.path.join(self.target_folder, file))
                     filtered_files.append(file)
@@ -109,17 +108,5 @@ def save_execution_time(classifier_contratacion, classifier_anuncio, classifier_
         classifier_anuncio: Instance of ClassifierAnuncio.
         classifier_formalizacion: Instance of ClassifierFormalizacion.
     """
-    with open("classify_time.csv", 'a') as f:
+    with open("data/classify_time.csv", 'a') as f:
         f.write(f"\n{classifier_contratacion.mm_yyyy},{classifier_contratacion.num_all_pdfs},{classifier_contratacion.execution_time},{classifier_contratacion.num_contratacion_pdfs},{classifier_anuncio.execution_time},{classifier_anuncio.num_anuncio_pdfs},{classifier_formalizacion.execution_time},{classifier_formalizacion.num_formalizacion_pdfs},{classifier_contratacion.execution_date}")
-
-# Test the three classes and save the execution time
-source_folder_contratacion = 'pdfs_range_08-2016'
-classifier_contratacion = ClassifierContratacion(source_folder=source_folder_contratacion)
-
-source_folder_anuncio = 'pdfs_range_08-2016/contratacion'
-classifier_anuncio = ClassifierAnuncio(source_folder=source_folder_anuncio)
-
-source_folder_formalizacion = 'pdfs_range_08-2016/contratacion'
-classifier_formalizacion = ClassifierFormalizacion(source_folder=source_folder_formalizacion)
-
-save_execution_time(classifier_contratacion, classifier_anuncio, classifier_formalizacion)
