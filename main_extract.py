@@ -39,6 +39,7 @@ def main(mm_yyyy: str, sampled_files: list):
     ################################################## MAIN LOOP ##################################################
     # Process each PDF
     for pdf in pdfs:
+        pdf_dir = f"pdfs_range_{mm_yyyy}/formalizacion"
         start_time = time.time()  # Start time measurement
         # Select model
         model = randomize_model()
