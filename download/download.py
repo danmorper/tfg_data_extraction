@@ -53,47 +53,60 @@ class Download:
                     to_download.append(id_url)
         return to_download
 
+    def has_been_executed(self):
+        if not os.path.exists(self.csv_path):
+            return False
+        with open(self.csv_path, 'r') as f:
+            for line in f:
+                if self.mm_yyyy in line:
+                    return True
+        return False
+    
     def download_data(self):
-        # Save execution time with the format DD-MM-YYYY HH:MM:SS
-        execution_date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-        # Start time
-        time_start = time.time()
-
-        to_download = self.list_download()
-        
-        # Create the folder
-        was_created = self.create_folder()
-        
-        if was_created:
-            logging.info(f"Folder pdfs_range_{self.mm_yyyy} already exists.")
+        if self.has_been_executed():
+            logging.info(f"Data for {self.mm_yyyy} has already been downloaded.")
         else:
-            # Download the pdfs
-            base_url = "https://boe.es" 
-            # Download the pdfs
-            for id_url in to_download:
-                url = id_url[1]
-                full_url = base_url + url
-                print(f"Downloading {full_url}")
-                filename = full_url.split("/")[-1]
-                path = f"pdfs_range_{self.mm_yyyy}/{filename}"
-                try:
-                    response = requests.get(full_url)
-                    if response.status_code == 200:
-                        with open(path, 'wb') as f:
-                            f.write(response.content)
-                        logging.info(f"Downloaded PDF {filename} successfully.")
-                    else:
-                        logging.warning(f"Failed to download {filename}: Status {response.status_code}")
-                except requests.RequestException as e:
-                    with open("failed_downloads.json", "a") as f:
-                        json.dump({"url": full_url, "error": str(e)}, f, indent=4)
-                        logging.error(f"Failed to download {filename}: {e}")
+        
+            # Save execution time with the format DD-MM-YYYY HH:MM:SS
+            execution_date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+            # Start time
+            time_start = time.time()
 
-            # End time
-            time_end = time.time()
-            time_elapsed = time_end - time_start
+            to_download = self.list_download()
+            
+            # Create the folder
+            was_created = self.create_folder()
+            
+            if was_created:
+                logging.info(f"Folder pdfs_range_{self.mm_yyyy} already exists.")
+            else:
+                # Download the pdfs
+                base_url = "https://boe.es" 
+                # Download the pdfs
+                for id_url in to_download:
+                    url = id_url[1]
+                    full_url = base_url + url
+                    print(f"Downloading {full_url}")
+                    filename = full_url.split("/")[-1]
+                    path = f"pdfs_range_{self.mm_yyyy}/{filename}"
+                    try:
+                        response = requests.get(full_url)
+                        if response.status_code == 200:
+                            with open(path, 'wb') as f:
+                                f.write(response.content)
+                            logging.info(f"Downloaded PDF {filename} successfully.")
+                        else:
+                            logging.warning(f"Failed to download {filename}: Status {response.status_code}")
+                    except requests.RequestException as e:
+                        with open("failed_downloads.json", "a") as f:
+                            json.dump({"url": full_url, "error": str(e)}, f, indent=4)
+                            logging.error(f"Failed to download {filename}: {e}")
 
-            # Save in download_time.csv. It has 4 columns: 
-            # start_date,end_date,number_requests,number_pdfs,time,execution_date
-            with open('data/download_time.csv', 'a') as f:
-                f.write(f"\n{self.start_date},{self.end_date},{len(to_download)},{len(os.listdir(f'pdfs_range_{self.mm_yyyy}'))},{time_elapsed},{execution_date}")
+                # End time
+                time_end = time.time()
+                time_elapsed = time_end - time_start
+
+                # Save in download_time.csv. It has 7 columns: 
+                # start_date,end_date,mm_yyyy,number_requests,number_pdfs,time,execution_date
+                with open('data/download_time.csv', 'a') as f:
+                    f.write(f"\n{self.start_date},{self.end_date},{self.mm_yyyy},{len(to_download)},{len(os.listdir(f'pdfs_range_{self.mm_yyyy}'))},{time_elapsed},{execution_date}")
