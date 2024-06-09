@@ -5,13 +5,6 @@ import logging
 import time
 from datetime import datetime
 
-def is_valid_date(date_string, date_format='%d-%m-%Y'):
-    try:
-        datetime.strptime(date_string, date_format)
-        return True
-    except ValueError:
-        return False
-    
 class Download:
     def __init__(self, start_date, end_date, mm_yyyy):
         self.start_date = start_date
@@ -22,13 +15,20 @@ class Download:
         with open('xml_departamento_id_fecha.json') as f:
             self.data = json.load(f)
 
+    def validate_and_create_date(self, date_str, date_format):
+        try:
+            return datetime.strptime(date_str, date_format)
+        except ValueError as e:
+            print(f"Error parsing date: {e}")
+            raise
+
     def filter_dates(self, data, start_date_bad_format, end_date_bad_format):
         date_format_data = '%d/%m/%Y'
         date_format_script = '%d-%m-%Y'
 
-        if not is_valid_date(start_date_bad_format, date_format_script):
+        if not self.validate_and_create_date(start_date_bad_format, date_format_script):
             raise ValueError(f"Invalid start date: {start_date_bad_format}")
-        if not is_valid_date(end_date_bad_format, date_format_script):
+        if not self.validate_and_create_date(end_date_bad_format, date_format_script):
             raise ValueError(f"Invalid end date: {end_date_bad_format}")
     
         start_date = datetime.strptime(start_date_bad_format, date_format_script)

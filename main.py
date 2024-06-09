@@ -13,17 +13,22 @@ from main_extract import main as extract_main
 start_year = 2015
 end_year = 2018
 # List of months in the format mm-yyyy
-list_mm_yyyy = [f"{mm_yyyy:02d}-{year}" for year in range(start_year, end_year) for mm_yyyy in range(1, 13)] # List of months in the format mm-yyyy
+list_mm_yyyy = [f"{mm_yyyy:02d}-{year}" for year in range(start_year, end_year+1) for mm_yyyy in range(1, 13)] # List of months in the format mm-yyyy
 num_files = 300 # Number of files to sample
 
 # First create folders, download and classify files
 for mm_yyyy in list_mm_yyyy:
-    download_main(mm_yyyy)
-    classify_main(mm_yyyy)
+    try:
+        download_main(mm_yyyy)
+        classify_main(mm_yyyy)
+    except Exception as e:
+        print(f"Error processing {mm_yyyy}: {e}")
 
 # Sample the files
-mm_yyyy_sampled_files, mm_yyyy_size, mm_yyyy_weight = files_sampler(list_mm_yyyy, num_files)
-
+try:
+    mm_yyyy_sampled_files, mm_yyyy_size, mm_yyyy_weight = files_sampler(list_mm_yyyy, num_files)
+except Exception as e:
+    print(f"Error sampling files: {e}")
 # Save mm_yyyy_size, mm_yyyy_size and mm_yyyy_weight
 import json
 with open("data/mm_yyyy_sampled_files.json", "w") as f:
