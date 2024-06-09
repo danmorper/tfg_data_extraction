@@ -10,7 +10,7 @@ class Download:
         self.start_date = start_date
         self.end_date = end_date
         self.mm_yyyy = mm_yyyy
-        
+        self.csv_path = 'data/download_time.csv'
         # Read the data from the json file
         with open('xml_departamento_id_fecha.json') as f:
             self.data = json.load(f)
@@ -108,5 +108,5 @@ class Download:
 
                 # Save in download_time.csv. It has 7 columns: 
                 # start_date,end_date,mm_yyyy,number_requests,number_pdfs,time,execution_date
-                with open('data/download_time.csv', 'a') as f:
+                with open(, 'a') as f:
                     f.write(f"\n{self.start_date},{self.end_date},{self.mm_yyyy},{len(to_download)},{len(os.listdir(f'pdfs_range_{self.mm_yyyy}'))},{time_elapsed},{execution_date}")
