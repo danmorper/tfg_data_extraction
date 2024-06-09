@@ -5,6 +5,13 @@ import logging
 import time
 from datetime import datetime
 
+def is_valid_date(date_string, date_format='%d-%m-%Y'):
+    try:
+        datetime.strptime(date_string, date_format)
+        return True
+    except ValueError:
+        return False
+    
 class Download:
     def __init__(self, start_date, end_date, mm_yyyy):
         self.start_date = start_date
@@ -18,6 +25,12 @@ class Download:
     def filter_dates(self, data, start_date_bad_format, end_date_bad_format):
         date_format_data = '%d/%m/%Y'
         date_format_script = '%d-%m-%Y'
+
+        if not is_valid_date(start_date_bad_format, date_format_script):
+            raise ValueError(f"Invalid start date: {start_date_bad_format}")
+        if not is_valid_date(end_date_bad_format, date_format_script):
+            raise ValueError(f"Invalid end date: {end_date_bad_format}")
+    
         start_date = datetime.strptime(start_date_bad_format, date_format_script)
         end_date = datetime.strptime(end_date_bad_format, date_format_script)
 
@@ -86,7 +99,7 @@ class Download:
                 for id_url in to_download:
                     url = id_url[1]
                     full_url = base_url + url
-                    print(f"Downloading {full_url}")
+                    #print(f"Downloading {full_url}")
                     filename = full_url.split("/")[-1]
                     path = f"pdfs_range_{self.mm_yyyy}/{filename}"
                     try:
@@ -105,7 +118,7 @@ class Download:
                 # End time
                 time_end = time.time()
                 time_elapsed = time_end - time_start
-
+                print(f"Downloaded {len(to_download)} files, month {self.mm_yyyy} in {time_elapsed} seconds.")
                 # Save in download_time.csv. It has 7 columns: 
                 # start_date,end_date,mm_yyyy,number_requests,number_pdfs,time,execution_date
                 with open(self.csv_path, 'a') as f:
