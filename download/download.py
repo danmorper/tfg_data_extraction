@@ -114,6 +114,7 @@ class Download:
                         with open("failed_downloads.json", "a") as f:
                             json.dump({"url": full_url, "error": str(e)}, f, indent=4)
                             logging.error(f"Failed to download {filename}: {e}")
+                    time.sleep(0.8)  # Delay of 1 second between requests
 
                 # End time
                 time_end = time.time()

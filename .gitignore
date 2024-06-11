@@ -9,7 +9,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Ignore xml_departamento_id_fecha.json
+# Ignore xml_departamento_id_fecha.json. It is essential for the execution
 xml_departamento_id_fecha.json
 
 

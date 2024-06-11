@@ -9,9 +9,9 @@ from samplers.month_sampler import files_sampler
 # Extract data
 from main_extract import main as extract_main
 
-# Define start and end years
-start_year = 2015
-end_year = 2018
+# Ask for start and end year
+start_year = int(input("Enter start year: "))
+end_year = int(input("Enter end year: "))
 # List of months in the format mm-yyyy
 list_mm_yyyy = [f"{mm_yyyy:02d}-{year}" for year in range(start_year, end_year+1) for mm_yyyy in range(1, 13)] # List of months in the format mm-yyyy
 num_files = 300 # Number of files to sample
@@ -31,11 +31,11 @@ except Exception as e:
     print(f"Error sampling files: {e}")
 # Save mm_yyyy_size, mm_yyyy_size and mm_yyyy_weight
 import json
-with open("data/mm_yyyy_sampled_files.json", "w") as f:
+with open("data/mm_yyyy_sampled_files.json", "a") as f:
     json.dump(mm_yyyy_sampled_files, f, indent=4)
-with open("data/mm_yyyy_size.json", "w") as f:
+with open("data/mm_yyyy_size.json", "a") as f:
     json.dump(mm_yyyy_size, f, indent=4)
-with open("data/mm_yyyy_weight.json", "w") as f:
+with open("data/mm_yyyy_weight.json", "a") as f:
     json.dump(mm_yyyy_weight, f, indent=4)
 
 # Loop through the list of months amd extract the data
