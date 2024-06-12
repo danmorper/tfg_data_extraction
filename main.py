@@ -20,10 +20,12 @@ num_files = 300 # Number of files to sample
 for mm_yyyy in list_mm_yyyy:
     try:
         download_main(mm_yyyy)
+    except Exception as e:
+        print(f"Error downloading files: {e}")
+    try:
         classify_main(mm_yyyy)
     except Exception as e:
-        print(f"Error processing {mm_yyyy}: {e}")
-
+        print(f"Error classifying files: {e}")
 # Sample the files
 try:
     mm_yyyy_sampled_files, mm_yyyy_size, mm_yyyy_weight = files_sampler(list_mm_yyyy, num_files)
