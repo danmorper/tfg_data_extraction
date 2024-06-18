@@ -54,11 +54,11 @@ except Exception as e:
     logging.error(f"Error sampling files: {e}")
 # Save mm_yyyy_size, mm_yyyy_size and mm_yyyy_weight
 import json
-with open("data/mm_yyyy_sampled_files.json", "a") as f:
+with open("data/mm_yyyy_sampled_files.json", "w") as f:
     json.dump(mm_yyyy_sampled_files, f, indent=4)
-with open("data/mm_yyyy_size.json", "a") as f:
+with open("data/mm_yyyy_size.json", "w") as f:
     json.dump(mm_yyyy_size, f, indent=4)
-with open("data/mm_yyyy_weight.json", "a") as f:
+with open("data/mm_yyyy_weight.json", "w") as f:
     json.dump(mm_yyyy_weight, f, indent=4)
 
 # Loop through the list of months amd extract the data
