@@ -6,15 +6,16 @@ import time
 from datetime import datetime
 import logging
 
-# Setup logging
-logging.basicConfig(filename='download.log',
-                    level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+def setup_logging(log_dir, log_filename):
+    log_path = os.path.join(log_dir, log_filename)
+    logging.basicConfig(filename=log_path,
+                        level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levellevel)s - %(message)s')
 
 
 class Download:
-    def __init__(self, start_date, end_date, mm_yyyy):
-        logging.debug(f"Initialized Download with dates: {start_date} to {end_date}")
+    def __init__(self, start_date, end_date, mm_yyyy, log_dir):
+        setup_logging(log_dir, 'download.log')
 
         self.start_date = start_date
         self.end_date = end_date

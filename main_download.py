@@ -1,14 +1,15 @@
 from download.download import Download
 import calendar
 from datetime import datetime
+import os
 import logging
 
-# Setup logging
-logging.basicConfig(filename='main_download.log',
-                    level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-def main(mm_yyyy: str):
+def main(mm_yyyy: str, log_dir: str):
+    # Setup logging
+    log_path = os.path.join(log_dir, 'main_download.log')
+    logging.basicConfig(filename=log_path,
+                        level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     try:
         start_date = f"01-{mm_yyyy}"
         month, year = mm_yyyy.split("-")
@@ -24,7 +25,7 @@ def main(mm_yyyy: str):
         end_date = f"{end_day:02d}-{mm_yyyy}"
         
         logging.debug(f"Creating download instance for {mm_yyyy} with dates {start_date} to {end_date}")
-        download = Download(start_date, end_date, mm_yyyy)
+        download = Download(start_date, end_date, mm_yyyy, log_dir)
         download.download_data()
     except Exception as e:
         logging.error(f"Error downloading data for {mm_yyyy}: {e}")

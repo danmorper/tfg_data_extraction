@@ -1,12 +1,17 @@
 import instructor
 from openai import OpenAI
 from pydantic import BaseModel, Field
+import os
 import logging
 
-# Setup logging
-logging.basicConfig(filename='data_extractors.log', 
-                    level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Set up logging
+def setup_logging(log_dir: str, log_filename: str):
+    log_path = os.path.join(log_dir, log_filename)
+    logging.basicConfig(
+        filename=log_path,
+        level=logging.DEBUG,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
 
 # Define the Pydantic models for the data extracted
 class CompanyData(BaseModel):
@@ -36,7 +41,11 @@ class TramitacionData(BaseModel):
 
 # Define the DataExtractor class
 class DataExtractor:
-    def __init__(self, model = "llama3",api_key: str ='ollama', base_url="http://localhost:11434/v1", text_company: str = None, text_amount: str = None, text_adjudicadora: str = None, text_tipo: str = None, text_tramitacion: str = None):
+    def __init__(self, model = "llama3",api_key: str ='ollama', base_url="http://localhost:11434/v1", text_company: str = None, text_amount: str = None, text_adjudicadora: str = None, text_tipo: str = None, text_tramitacion: str = None, log_dir: str = "None"):
+        # Setup logging
+        setup_logging(log_dir, 'data_extractor.log')
+        logging.debug(f"Initializing DataExtractor with model: {model}")
+
         self.model = model
 
         self.text_company = text_company

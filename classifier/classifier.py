@@ -5,9 +5,15 @@ import PyPDF2
 import time
 import logging
 
+def setup_logging(log_dir, log_filename):
+    log_path = os.path.join(log_dir, log_filename)
+    logging.basicConfig(filename=log_path,
+                        level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    
 class CLassifier:
-    def __init__(self, source_folder, pattern, target_folder):
-        logging.debug(f"Classifier initialized for {self.source_folder} to {self.target_folder}")
+    def __init__(self, source_folder, pattern, target_folder, log_dir):
+        setup_logging(log_dir, 'classifier.log')
 
         start = time.time()
         self.source_folder = source_folder

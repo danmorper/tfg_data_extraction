@@ -1,13 +1,16 @@
 import os
 import random
 import logging
+from datetime import datetime
 
-# Setup logging
-logging.basicConfig(filename='month_sampler.log',
-                    level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+def setup_logging(log_dir, log_filename):
+    log_path = os.path.join(log_dir, log_filename)
+    logging.basicConfig(filename=log_path,
+                        level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levellevel)s - %(message)s')
 
-def files_sampler(list_mm_yyyy: list, num_files: int):
+def files_sampler(list_mm_yyyy: list, num_files: int, log_dir: str):
+    setup_logging(log_dir, 'month_sampler.log')
     mm_yyyy_num_files = {}
     total_files = 0
 

@@ -1,12 +1,15 @@
-# Read pdf
 import PyPDF2
 import re
 import logging
+import os
+from datetime import datetime
 
-# Setup logging
-logging.basicConfig(filename='data_loader.log', 
-                    level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# setup_logging function
+def setup_logging(log_dir, log_filename):
+    log_path = os.path.join(log_dir, log_filename)
+    logging.basicConfig(filename=log_path,
+                        level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 class DocumentPart:
@@ -19,7 +22,10 @@ class DocumentPart:
     
 
 class PDFReader:
-    def __init__(self, pdf_path):
+    def __init__(self, pdf_path, log_dir):
+        # Setup logging
+        setup_logging(log_dir, 'pdf_reader.log')
+
         self.pdf_path = pdf_path
         self.filename = pdf_path.split("/")[-1]
         self.document_parts = []

@@ -7,12 +7,13 @@ from tools.data_extractors import DataExtractor
 from samplers.model_randomizer import randomize_model
 import logging
 
-# Setup logging
-logging.basicConfig(filename='main_extract.log',
-                    level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+def main(mm_yyyy: str, sampled_files: list, log_dir: str):
+    # Setup logging
+    log_path = os.path.join(log_dir, 'main_extract.log')
+    logging.basicConfig(filename=log_path,
+                        level=logging.DEBUG,
+                        format='%(asctime)s - %(name)s - %(levellevel)s - %(message)s')
 
-def main(mm_yyyy: str, sampled_files: list):
     # Directory and file paths
     csv_file_path = "data/formalizacion_data.csv"
     json_file_path = "data/contratacion.json"
@@ -51,14 +52,15 @@ def main(mm_yyyy: str, sampled_files: list):
         model = randomize_model()
         try:
             pdf_path = os.path.join(pdf_dir, pdf)
-            pdf_reader = PDFReader(pdf_path=pdf_path)
+            pdf_reader = PDFReader(pdf_path=pdf_path, log_dir=log_dir)
             extracted_data = DataExtractor(
                 model=model,
                 text_company=pdf_reader.get_certain_parts(num=6),
                 text_amount=pdf_reader.get_certain_parts(num=5),
                 text_adjudicadora=pdf_reader.get_certain_parts(num=1),
                 text_tipo=pdf_reader.get_certain_parts(num=2),
-                text_tramitacion=pdf_reader.get_certain_parts(num=3)
+                text_tramitacion=pdf_reader.get_certain_parts(num=3),
+                log_dir=log_dir
             )
 
             # Calculate processing time
