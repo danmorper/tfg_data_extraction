@@ -7,6 +7,11 @@ from tools.data_extractors import DataExtractor
 from samplers.model_randomizer import randomize_model
 import logging
 
+# Setup logging
+logging.basicConfig(filename='main_extract.log',
+                    level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 def main(mm_yyyy: str, sampled_files: list):
     # Directory and file paths
     csv_file_path = "data/formalizacion_data.csv"
@@ -38,6 +43,7 @@ def main(mm_yyyy: str, sampled_files: list):
 
     ################################################## MAIN LOOP ##################################################
     # Process each PDF
+    logging.debug(f"Starting extraction for {mm_yyyy} with {len(pdfs)} PDFs")
     for pdf in pdfs:
         pdf_dir = f"pdfs_range_{mm_yyyy}/formalizacion"
         start_time = time.time()  # Start time measurement

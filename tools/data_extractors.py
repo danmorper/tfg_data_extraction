@@ -1,6 +1,12 @@
 import instructor
 from openai import OpenAI
 from pydantic import BaseModel, Field
+import logging
+
+# Setup logging
+logging.basicConfig(filename='data_extractors.log', 
+                    level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # Define the Pydantic models for the data extracted
 class CompanyData(BaseModel):
@@ -57,38 +63,38 @@ class DataExtractor:
         self.procedimiento = None
 
         if self.text_amount is not None:
-            print("Extracting amount")
+            logging.debug("Extracting amount")
             try:
 
                 self.extract_amount()
-            except:
-                print(f"Error extracting amount")
+            except Exception as e:
+                logging.debug(f"Error extracting amount: {e}")
                 
         if self.text_company is not None:
-            print("Extracting company name")
+            logging.debug("Extracting company name")
             try:
                 self.extract_company()
-            except:
-                print(f"Error extracting company name")
+            except Exception as e:
+                logging.debug(f"Error extracting company name: {e}")
         
         if self.text_adjudicadora is not None:
-            print("Extracting adjudicadora")
+            logging.debug("Extracting adjudicadora")
             try:
                 self.extract_adjudicadora()
-            except:
-                print(f"Error extracting adjudicadora")
+            except Exception as e:
+                logging.debug(f"Error extracting adjudicadora: {e}")
         if self.text_tipo is not None:
-            print("Extracting tipo")
+            logging.debug("Extracting tipo")
             try:
                 self.extract_tipo()
-            except:
-                print(f"Error extracting tipo")
+            except Exception as e:
+                logging.debug(f"Error extracting tipo: {e}")
         if self.text_tramitacion is not None:
-            print("Extracting tramitacion")
+            logging.debug("Extracting tramitacion")
             try:
                 self.extract_tramitacion()
-            except:
-                print(f"Error extracting tramitacion")
+            except Exception as e:
+                logging.debug(f"Error extracting tramitacion: {e}")
 
     def extract_company(self):
         content = f"""
@@ -101,7 +107,6 @@ class DataExtractor:
 
         The company name is LIFE CARE S.L.
         """
-        print(content)
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[{"role": "user", "content": content}],
@@ -109,7 +114,7 @@ class DataExtractor:
             max_retries=3
         )
         self.company_name = response.company
-        
+        logging.debug(f"Extracted company name: {self.company_name}")
 
     def extract_amount(self):
         content = f"""
@@ -118,7 +123,6 @@ class DataExtractor:
 
         Output should follow python float number, for example with "Importe total: 302.000,00 euros." the number would be 302000.00
         """
-        print(content)
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[{"role": "user", "content": content}],
@@ -127,13 +131,13 @@ class DataExtractor:
         )
         self.amount = response.amount
         self.currency = response.currency
+        logging.debug(f"Extracted amount: {self.amount}, currency: {self.currency}")
 
     def extract_adjudicadora(self):
         content = f"""
         Extract the name of the Contracting Authority from the text. Normally it is referred to as "Organismo" or "Entidad adjudicadora". Extract also "Numero de expediente" if available. IT IS NOT A PERSON, IT IS AN INSTITUTION OF PUBLIC ADMINISTRATION. Example text:
         {self.text_adjudicadora}
         """
-        print(content)
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[{"role": "user", "content": content}],
@@ -142,6 +146,7 @@ class DataExtractor:
         )
         self.adjudicadora = response.adjudicadora
         #self.expediente = response.expediente
+        logging.debug(f"Extracted adjudicadora: {self.adjudicadora}")
 
     def extract_tipo(self):
         content = f"""
@@ -150,7 +155,6 @@ class DataExtractor:
         Example text:
         {self.text_tipo}
         """
-        print(content)
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[{"role": "user", "content": content}],
@@ -158,7 +162,8 @@ class DataExtractor:
             max_retries=3
         )
         self.tipo = response.tipo
-    
+        logging.debug(f"Extracted tipo: {self.tipo}")
+
     def extract_tramitacion(self):
         content = f"""
         Extract the "tramitacion" and "procedimiento" from the text.
@@ -167,7 +172,6 @@ class DataExtractor:
         Example text:
         {self.text_tramitacion}
         """
-        print(content)
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[{"role": "user", "content": content}],
@@ -176,6 +180,7 @@ class DataExtractor:
         )
         self.tramitacion = response.tramitacion
         self.procedimiento = response.procedimiento
+        logging.debug(f"Extracted tramitacion: {self.tramitacion}, procedimiento: {self.procedimiento}")
 
     def __str__(self) -> str:
         printed_text = f"""

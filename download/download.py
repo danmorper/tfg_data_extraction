@@ -4,9 +4,18 @@ import requests
 import logging
 import time
 from datetime import datetime
+import logging
+
+# Setup logging
+logging.basicConfig(filename='download.log',
+                    level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 
 class Download:
     def __init__(self, start_date, end_date, mm_yyyy):
+        logging.debug(f"Initialized Download with dates: {start_date} to {end_date}")
+
         self.start_date = start_date
         self.end_date = end_date
         self.mm_yyyy = mm_yyyy
@@ -19,7 +28,7 @@ class Download:
         try:
             return datetime.strptime(date_str, date_format)
         except ValueError as e:
-            print(f"Error parsing date: {e}")
+            logging.error(f"Error parsing date: {e}")
             raise
 
     def filter_dates(self, data, start_date_bad_format, end_date_bad_format):
@@ -37,19 +46,21 @@ class Download:
         filtered_data = [d for d in data if d['date'] != "date not found"]
         filtered_data = [d for d in filtered_data if start_date <= datetime.strptime(d['date'], date_format_data) <= end_date]
 
-
-        with open(f'xml_id_fecha_filtered_{self.mm_yyyy}.json', 'w') as f:
+        filtered_file = f'xml_id_fecha_filtered_{self.mm_yyyy}.json'
+        with open(filtered_file, 'w') as f:
             json.dump(filtered_data, f, indent=4)
-        
+        logging.debug(f"Filtered dates and saved to {filtered_file}")
+
         return filtered_data
     
     def create_folder(self):
         folder = f"pdfs_range_{self.mm_yyyy}"
-        print(f"Creating folder {folder}")
         if os.path.exists(folder):
+            logging.debug(f"Folder {folder} already exists")
             return True
         else:
             os.makedirs(folder)
+            logging.debug(f"Created folder {folder}")
             return False
 
     def list_download(self):
@@ -64,6 +75,7 @@ class Download:
                 # Obtener directamente los IDs desde ids_urls sin usar lambda
                 for id_url in ids_urls:
                     to_download.append(id_url)
+        logging.debug(f"Prepared list of files to download: {len(to_download)} items")
         return to_download
 
     def has_been_executed(self):
@@ -72,6 +84,7 @@ class Download:
         with open(self.csv_path, 'r') as f:
             for line in f:
                 if self.mm_yyyy in line:
+                    logging.debug(f"Data for {self.mm_yyyy} has already been downloaded")
                     return True
         return False
     
@@ -114,13 +127,14 @@ class Download:
                         with open("failed_downloads.json", "a") as f:
                             json.dump({"url": full_url, "error": str(e)}, f, indent=4)
                             logging.error(f"Failed to download {filename}: {e}")
-                    time.sleep(0.8)  # Delay of 1 second between requests
+                    time.sleep(0.5)  # Delay of 0.5 second between requests
 
                 # End time
                 time_end = time.time()
                 time_elapsed = time_end - time_start
-                print(f"Downloaded {len(to_download)} files, month {self.mm_yyyy} in {time_elapsed} seconds.")
+                logging.debug(f"Downloaded {len(to_download)} files for {self.mm_yyyy} in {time_elapsed} seconds.")
                 # Save in download_time.csv. It has 7 columns: 
                 # start_date,end_date,mm_yyyy,number_requests,number_pdfs,time,execution_date
                 with open(self.csv_path, 'a') as f:
                     f.write(f"\n{self.start_date},{self.end_date},{self.mm_yyyy},{len(to_download)},{len(os.listdir(f'pdfs_range_{self.mm_yyyy}'))},{time_elapsed},{execution_date}")
+                logging.debug(f"Saved download record for {self.mm_yyyy}")
