@@ -53,21 +53,27 @@ class CLassifier:
             os.makedirs(self.target_folder)
             logging.debug(f'Created target folder: {self.target_folder}')
 
-        filtered_files = []
-        for file in os.listdir(self.source_folder):
-            if file.endswith('.pdf'):
-                full_path = os.path.join(self.source_folder, file)
-                text = self.read_pdf(full_path)
-                matches = self.filter_text(text, pattern)
-                if matches:
-                    # move to target folder
-                    shutil.move(full_path, os.path.join(self.target_folder, file))
-                    filtered_files.append(file)
-                    logging.debug(f"Moved file {file} to {self.target_folder}")
+            filtered_files = []
+            for file in os.listdir(self.source_folder):
+                if file.endswith('.pdf'):
+                    full_path = os.path.join(self.source_folder, file)
+                    text = self.read_pdf(full_path)
+                    matches = self.filter_text(text, pattern)
+                    if matches:
+                        # move to target folder
+                        shutil.move(full_path, os.path.join(self.target_folder, file))
+                        filtered_files.append(file)
+                        logging.debug(f"Moved file {file} to {self.target_folder}")
+            # Add the number of filtered files to the log
+            logging.debug(f"Filtered {len(filtered_files)} files with pattern {pattern}")
+        else:
+            logging.debug(f"Target folder {self.target_folder} already exists")
+
 
 
 class ClassifierContratacion(CLassifier):
     def __init__(self, source_folder):
+        logging.debug(f"ClassifierContratacion for {source_folder}")
         pattern_contratacion = r'A\. Contratación del Sector Público'
         target_folder = os.path.join(source_folder, 'contratacion')
 
@@ -83,7 +89,6 @@ class ClassifierContratacion(CLassifier):
         self.num_contratacion_pdfs = len(os.listdir(target_folder))
         # Call the delete_source_folder method
         self.delete_source_folder()
-        logging.debug(f"ClassifierContratacion processed {self.num_contratacion_pdfs} files")
 
     def delete_source_folder(self):
         """Deletes all pdfs in the source folder after filtering."""
@@ -94,7 +99,7 @@ class ClassifierContratacion(CLassifier):
 
 class ClassifierAnuncio(CLassifier):
     def __init__(self, source_folder):
-        logging.debug(f"ClassifierAnuncio processed {self.num_anuncio_pdfs} files")
+        logging.debug(f"ClassifierAnuncio for {source_folder}")
 
         pattern_contratacion = r'Anuncio de formalización'
         parent_folder = os.path.dirname(source_folder)
@@ -107,7 +112,7 @@ class ClassifierAnuncio(CLassifier):
 
 class ClassifierFormalizacion(CLassifier):
     def __init__(self, source_folder):
-        logging.debug(f"ClassifierFormalizacion processed {self.num_formalizacion_pdfs} files")
+        logging.debug(f"ClassifierFormalizacion for {source_folder}")
 
         pattern_contratacion = r'Formalización del contrato'
         parent_folder = os.path.dirname(source_folder)
