@@ -68,7 +68,6 @@ class CLassifier:
 
 class ClassifierContratacion(CLassifier):
     def __init__(self, source_folder):
-        logging.debug(f"ClassifierContratacion processed {self.num_contratacion_pdfs} files")
         pattern_contratacion = r'A\. Contratación del Sector Público'
         target_folder = os.path.join(source_folder, 'contratacion')
 
@@ -84,6 +83,7 @@ class ClassifierContratacion(CLassifier):
         self.num_contratacion_pdfs = len(os.listdir(target_folder))
         # Call the delete_source_folder method
         self.delete_source_folder()
+        logging.debug(f"ClassifierContratacion processed {self.num_contratacion_pdfs} files")
 
     def delete_source_folder(self):
         """Deletes all pdfs in the source folder after filtering."""
