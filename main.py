@@ -9,6 +9,8 @@ from samplers.month_sampler import files_sampler
 # Extract data
 from main_extract import main as extract_main
 
+import pandas as pd
+
 # Create log directory
 import os
 from datetime import datetime
@@ -39,14 +41,22 @@ num_files = 300 # Number of files to sample
 
 # First create folders, download and classify files
 for mm_yyyy in list_mm_yyyy:
-    try:
-        download_main(mm_yyyy, log_dir_path)
-    except Exception as e:
-        logging.error(f"Error downloading files: {e}")
-    try:
-        classify_main(mm_yyyy, log_dir_path)
-    except Exception as e:
-        logging.error(f"Error classifying files: {e}")
+    # check if mm_yyyy is in data/classify_time.csv
+    classify_time_path = "data/classify_time.csv"
+    if os.path.exists(classify_time_path):
+        classify_time_df = pd.read_csv(classify_time_path)
+    if mm_yyyy in classify_time_df["mm_yyyy"].values:
+        logging.debug(f"{mm_yyyy} already classified")
+        continue
+    else:
+        try:
+            download_main(mm_yyyy, log_dir_path)
+        except Exception as e:
+            logging.error(f"Error downloading files: {e}")
+        try:
+            classify_main(mm_yyyy, log_dir_path)
+        except Exception as e:
+            logging.error(f"Error classifying files: {e}")
 # Sample the files
 try:
     mm_yyyy_sampled_files, mm_yyyy_size, mm_yyyy_weight = files_sampler(list_mm_yyyy, num_files, log_dir_path)
