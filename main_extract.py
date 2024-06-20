@@ -49,7 +49,7 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
         pdf_dir = f"pdfs_range_{mm_yyyy}/formalizacion"
         start_time = time.time()  # Start time measurement
         # Select model
-        model = randomize_model()
+        model = randomize_model(log_dir=log_dir)
         try:
             pdf_path = os.path.join(pdf_dir, pdf)
             pdf_reader = PDFReader(pdf_path=pdf_path, log_dir=log_dir)
