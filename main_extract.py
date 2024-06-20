@@ -16,7 +16,7 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
 
     # Directory and file paths
     csv_file_path = "data/formalizacion_data.csv"
-    json_file_path = "data/contratacion.json"
+    json_file_path = "data/formalizacion_data.json"
 
     # Read existing data
     try:
