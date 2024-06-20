@@ -57,3 +57,5 @@ def files_sampler(list_mm_yyyy: list, num_files: int, log_dir: str):
         else:
             mm_yyyy_sampled_files[mm_yyyy] = []
             logging.warning(f"Folder {folder_path} does not exist. No files sampled for {mm_yyyy}")
+
+    return mm_yyyy_sampled_files, mm_yyyy_size, mm_yyyy_weight
