@@ -1,4 +1,64 @@
-Let's proceed with the data extraction. We have the file `xml_departamento_id_fecha.json`, which is a list of dictionaries with the following structure:
+# PDF Document Data Extraction Project
+
+This project aims to download, classify, sample, and extract data from PDF documents related to public sector contracts.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Project Structure](#project-structure)
+- [Workflow](#workflow)
+- [Script Details](#script-details)
+- [Usage Instructions](#usage-instructions)
+- [Stored Data](#stored-data)
+- [Contributions](#contributions)
+- [License](#license)
+
+## Overview
+
+The project automates the process of downloading PDF files from a specific source, classifying the files into relevant categories, sampling files for further processing, and extracting specific data from the PDF files.
+
+## Project Structure
+```verbatim
+pdf-data-extraction-project/
+│
+├── data/
+│ ├── classify_time.csv
+│ ├── formalizacion_data.csv
+│ ├── formalizacion_data.json
+│ ├── mm_yyyy_sampled_files.json
+│ ├── mm_yyyy_size.json
+│ ├── mm_yyyy_weight.json
+│ ├── download_time.csv
+│ └── fail_downloads.json
+├── logs/
+│ ├── main.log
+│ ├── main_download.log
+│ ├── main_classifier.log
+│ ├── main_extract.log
+│ └── other_log_files.log
+├── pdfs_range_mm-yyyy/
+│ ├── contratacion/
+│ ├── anuncio/
+│ ├── formalizacion/
+├── scripts/
+│ ├── main.py
+│ ├── main_download.py
+│ ├── main_classifier.py
+│ ├── main_extract.py
+│ ├── download.py
+│ ├── classifier.py
+│ ├── data_loader.py
+│ ├── data_extractors.py
+│ ├── model_randomizer.py
+│ └── month_sampler.py
+└── README.md
+```
+
+## Workflow
+
+### 1. Download PDF Files
+
+The process starts with downloading PDF files based on a specified date range. The file `xml_departamento_id_fecha.json` provides the necessary data to identify and download relevant files.
 
 ```python
 {
@@ -21,10 +81,8 @@ Let's proceed with the data extraction. We have the file `xml_departamento_id_fe
     }
 
 ```
-
-Now, let's proceed with downloading the desired PDFs.
-
-Initially, a directory named `pdfs_range_mm-yyyy/` is created to contain all PDF files from a specific month and year. Subsequently, a subdirectory `contratacion/` is established within `pdfs_range_mm-yyyy/` to house PDFs associated with public sector contracts. These PDFs are identified by their content containing the phrase 'A Contratación del Sector Público'. Following the same method, two additional subdirectories, `anuncio/` and `formalizacion/`, are created within `pdfs_range_mm-yyyy/` to accommodate PDFs related to contract formalization announcements and contract formalization, respectively. This hierarchical organization results in the following folder structure:
+## 2. Classify PDF Files
+The downloaded files are classified into different categories: Contratación (Public Procurement), Anuncio (Announcement), and Formalización (Formalization). Each category corresponds to a subdirectory within the directory for the relevant month and year.
 
 ```
 pdfs_range_mm-yyyy/
@@ -46,23 +104,33 @@ pdfs_range_mm-yyyy/
 ```
 
 All pdfs not related to public sector contrats are removed.
+## 3.  Sample PDF Files
+A random sampling of the PDF files is performed to optimize the data extraction process.
 
-# Download pdfs
-In `download/download.py`, we define a class `Download` with the following attributes:
-- Atributes
-    1. start_date
-    2. end_date
-    3. mm_yyyy: month and year in which we download the data (start date is thought to be 1/mm/yyyy and end_date 31/mm/yyyy)
-- methods:
-    - filter_dates(self, data, start_date_bad_format, end_date_bad_format): Filters the data based on the given start and end dates.
-    - create_folder(self): Creates a folder to save the downloaded PDFs.
-    - list_download(self): Generates a list of URLs to download based on the filtered data.
-    - download_data(self): Downloads the PDFs from the generated URLs and saves them to the appropriate folder.
+## 4. Data Extraction
+Finally, specific data is extracted from the sampled PDF files and stored in structured formats for further analysis.
 
-We save `start_date`, `end_date`, `number_requests`, `number_pdfs`, `time` (in seconds), and `execution_date` in `download_time.csv` to keep track of every downloaded month.
+# Script Details
 
-**IMPORTANT TO ENSURE THAT `download_time.csv` ONLY CONTAINS THE FOLLOWING TEXT**
-The rows are added with `\n` at the beggining.
+# Download pdfs (download/download.py)
+Defines the `Download` class responsible for filtering dates, creating folders, generating URL lists, and downloading the PDF files.
+
+```python
+class Download:
+    def __init__(self, start_date, end_date, mm_yyyy, log_dir):
+        # Initialize attributes
+    def filter_dates(self, data, start_date_bad_format, end_date_bad_format):
+        # Filter the dates
+    def create_folder(self):
+        # Create the folder for PDFs
+    def list_download(self):
+        # Generate the list of URLs
+    def download_data(self):
+        # Download the files
+```
+
+**Important**: Ensure that download_time.csv only contains the following header:
+
 ```csv
 start_date,end_date,number_requests,number_pdfs,time,execution_date
 ```
@@ -223,6 +291,6 @@ The pipeline consists of the following main steps:
 # Stored data
 
 - `formalizacion_data.csv`: main csv that will be used for data analysis.
-- `formalizacion_data.json`: it stores all the values in previous csv along with the text from which data was extracted in order to validate its consistency
+- `formalizacion_data.txt`: it stores all the values in previous csv along with the text from which data was extracted in order to validate its consistency
 - `fail_downloads.json`: unsucsessful HTTP requests to https://boe.es
 - `classify_time.csv`: time and number of files per month and per type of document.
