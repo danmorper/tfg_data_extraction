@@ -12,11 +12,11 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
     log_path = os.path.join(log_dir, 'main_extract.log')
     logging.basicConfig(filename=log_path,
                         level=logging.DEBUG,
-                        format='%(asctime)s - %(name)s - %(levellevel)s - %(message)s')
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')  # Corrected format string
 
     # Directory and file paths
     csv_file_path = "data/formalizacion_data.csv"
-    json_file_path = "data/formalizacion_data.json"
+    txt_file_path = "data/formalizacion_data.txt"
 
     # Read existing data
     try:
@@ -26,21 +26,10 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
         logging.error(f"Failed to read CSV file: {e}")
         pdfs_processed = []
 
-    # Read JSON data
-    try:
-        with open(json_file_path, 'r') as file:
-            text_information = json.load(file)
-    except Exception as e:
-        logging.error(f"Failed to read JSON file: {e}")
-        text_information = []
-
     pdfs = [f for f in sampled_files if f not in pdfs_processed]
 
     def delete_comma(text):
         return text.replace(",", "") if text else None
-
-    # Initialize counter for saving JSON data periodically
-    save_counter = 0
 
     ################################################## MAIN LOOP ##################################################
     # Process each PDF
@@ -69,7 +58,7 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
             # Prepare the new row to add to the CSV
             new_row = f"{pdf_reader.filename},{mm_yyyy},{delete_comma(extracted_data.company_name)},{extracted_data.amount},{delete_comma(extracted_data.currency)},{delete_comma(extracted_data.adjudicadora)},{delete_comma(extracted_data.tipo)},{delete_comma(extracted_data.tramitacion)},{delete_comma(extracted_data.procedimiento)},{extracted_data.model},{processing_time:.2f}"
 
-            new_text_information = {
+            text_information = {
                 "pdf": pdf_reader.filename,
                 "company_name": {
                     delete_comma(extracted_data.company_name): extracted_data.text_company
@@ -101,25 +90,18 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
             try:
                 with open(csv_file_path, "a") as file:
                     file.write("\n" + new_row)
+                logging.info(f"Data saved in the CSV file: {csv_file_path}. The data is: {new_row}")
             except Exception as e:
                 logging.error(f"Failed to write to CSV file: {e}")
 
-            # Update JSON
-            text_information.append(new_text_information)
-            
-            # Increment the save counter
-            save_counter += 1
-            
-            # Save JSON data every 3 iterations
-            if save_counter >= 3:
-                try:
-                    with open(json_file_path, 'w') as file:
-                        json.dump(text_information, file, indent=4)
-                    save_counter = 0  # Reset the counter after saving
-                    text_information = []  # Clear the list after saving
-                    logging.info("JSON data saved")
-                except Exception as e:
-                    logging.error(f"Failed to write JSON file: {e}")
+            # Update TXT with the JSON data as string
+            json_data = json.dumps(text_information, indent=4)
+            try:
+                with open(txt_file_path, 'a') as file:
+                    file.write(json_data + ",\n")
+                logging.info("JSON data saved")
+            except Exception as e:
+                logging.error(f"Failed to write JSON file: {e}")
 
             logging.info(f"Data extracted and processed from {pdf} in {processing_time:.2f} seconds")
 
@@ -128,12 +110,10 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
 
     # Final save of JSON data
     try:
-        with open(json_file_path, 'w') as file:
-            json.dump(text_information, file, indent=4)
+        with open(txt_file_path, 'a') as file:  # Corrected file path
+            file.write("]")  # Close the JSON array
         logging.info("Final JSON data saved")
     except Exception as e:
         logging.error(f"Failed to write final JSON file: {e}")
 
 ################################################## END OF MAIN LOOP ##################################################
-
-#256 mins 170 filas
