@@ -99,9 +99,9 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
             try:
                 with open(txt_file_path, 'a') as file:
                     file.write(json_data + ",\n")
-                logging.info("JSON data saved")
+                logging.info("JSON data saved in txt file")
             except Exception as e:
-                logging.error(f"Failed to write JSON file: {e}")
+                logging.error(f"Failed to write JSON data in txt file: {e}")
 
             logging.info(f"Data extracted and processed from {pdf} in {processing_time:.2f} seconds")
 
