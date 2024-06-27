@@ -7,22 +7,16 @@ from tools.data_extractors import DataExtractor
 from samplers.model_randomizer import randomize_model
 import logging
 
-def main(mm_yyyy: str, sampled_files: list, log_dir: str, comparison=False):
+def main(mm_yyyy: str, sampled_files: list, log_dir: str):
     # Setup logging
     log_path = os.path.join(log_dir, 'main_extract.log')
     logging.basicConfig(filename=log_path,
                         level=logging.DEBUG,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')  # Corrected format string
 
-    if comparison:
-        logging.info(f"Starting extraction for {mm_yyyy} with {len(sampled_files)} PDFs for comparison")
-        csv_file_path = "data/comparison.csv"
-        txt_file_path = "data/comparison.txt"
-    else:
-        logging.info(f"Starting extraction for {mm_yyyy} with {len(sampled_files)} PDFs")
-        # Directory and file paths
-        csv_file_path = "data/formalizacion_data.csv"
-        txt_file_path = "data/formalizacion_data.txt"
+    # Directory and file paths
+    csv_file_path = "data/formalizacion_data.csv"
+    txt_file_path = "data/formalizacion_data.txt"
 
     # Read existing data
     try:
