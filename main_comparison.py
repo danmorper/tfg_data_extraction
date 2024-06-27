@@ -9,7 +9,12 @@ from samplers.month_sampler import files_sampler
 # Extract data
 from main_extract import main as extract_main
 
+# multiple cpv codes
+from classifier.cpv import remove_invalid_pdfs_in_formalizacion_folder
+
 import pandas as pd
+
+import time
 
 # Create log directory
 import os
@@ -57,6 +62,29 @@ for mm_yyyy in list_mm_yyyy:
             classify_main(mm_yyyy, log_dir_path)
         except Exception as e:
             logging.error(f"Error classifying files: {e}")
+
+# Remove invalid PDFs
+# measure time
+start = time.time()
+# mm_yyyy_cpv is a list separated by new lines
+with open("mm_yyyy_cpv.txt", "r") as f:
+    mm_yyyy_cpv = f.read().splitlines()
+
+for mm_yyyy in list_mm_yyyy:
+    logging.debug(f"Determining if PDFs in {mm_yyyy} have more than one CPV code...")
+    if mm_yyyy not in mm_yyyy_cpv:
+        try:
+            remove_invalid_pdfs_in_formalizacion_folder(mm_yyyy, log_dir_path)
+            # Save month has been processed
+            with open("mm_yyyy_cpv.txt", "a") as f:
+                f.write(f"{mm_yyyy}\n")
+        except Exception as e:
+            logging.error(f"Error removing invalid PDFs: {e}")
+    else:
+        logging.debug(f"In {mm_yyyy} all PDFs have only one CPV code. No need to remove any PDFs.")
+end = time.time()
+logging.debug(f"Time taken to remove invalid PDFs: {end-start}")
+
 # Sample the files
 try:
     mm_yyyy_sampled_files, mm_yyyy_size, mm_yyyy_weight = files_sampler(list_mm_yyyy, num_files, log_dir_path)
