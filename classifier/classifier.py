@@ -83,7 +83,7 @@ class ClassifierContratacion(Classifier):
         # Get mm_yyyy from the source folder
         self.mm_yyyy = source_folder.split('_')[-1]
 
-        super().__init__(source_folder, pattern_contratacion, target_folder)
+        super().__init__(source_folder, pattern_contratacion, target_folder, log_dir)
 
         # Number of files in the target folder. It needs to be calculated after the filtering because the target folder is created in the parent class
         self.num_contratacion_pdfs = len(os.listdir(target_folder))
@@ -105,7 +105,7 @@ class ClassifierAnuncio(Classifier):
         parent_folder = os.path.dirname(source_folder)
         target_folder = os.path.join(parent_folder, 'anuncio')
 
-        super().__init__(source_folder, pattern_contratacion, target_folder)
+        super().__init__(source_folder, pattern_contratacion, target_folder, log_dir)
 
         # Number of files in target folder. It needs to be calculated after the filtering because the target folder is created in the parent class
         self.num_anuncio_pdfs = len(os.listdir(target_folder))
@@ -119,7 +119,7 @@ class ClassifierFormalizacion(Classifier):
         target_folder = os.path.join(parent_folder, 'formalizacion')
 
 
-        super().__init__(source_folder, pattern_contratacion, target_folder)
+        super().__init__(source_folder, pattern_contratacion, target_folder, log_dir)
 
         # Number of files in target folder. It needs to be calculated after the filtering because the target folder is created in the parent class
         self.num_formalizacion_pdfs = len(os.listdir(target_folder))
