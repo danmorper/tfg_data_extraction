@@ -7,7 +7,7 @@ from main_classifier import main as classify_main
 from samplers.month_sampler import files_sampler
 
 # Extract data
-from main_extract import main as extract_main
+from main_extract_comparison import main as extract_comparison_main
 
 # multiple cpv codes
 from classifier.cpv import remove_invalid_pdfs_in_formalizacion_folder
@@ -106,5 +106,5 @@ for mm_yyyy in list_mm_yyyy:
 
     # Extract data
     for mm_yyyy, sampled_files in mm_yyyy_sampled_files.items():
-        extract_main(mm_yyyy=mm_yyyy, sampled_files=sampled_files, log_dir=log_dir_path)
+        extract_comparison_main(mm_yyyy=mm_yyyy, sampled_files=sampled_files, log_dir=log_dir_path)
 
