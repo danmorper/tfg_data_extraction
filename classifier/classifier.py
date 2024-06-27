@@ -11,7 +11,7 @@ def setup_logging(log_dir, log_filename):
                         level=logging.DEBUG,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     
-class CLassifier:
+class Classifier:
     def __init__(self, source_folder, pattern, target_folder, log_dir):
         setup_logging(log_dir, 'classifier.log')
 
@@ -71,8 +71,8 @@ class CLassifier:
 
 
 
-class ClassifierContratacion(CLassifier):
-    def __init__(self, source_folder):
+class ClassifierContratacion(Classifier):
+    def __init__(self, source_folder, log_dir):
         logging.debug(f"ClassifierContratacion for {source_folder}")
         pattern_contratacion = r'A\. Contratación del Sector Público'
         target_folder = os.path.join(source_folder, 'contratacion')
@@ -97,8 +97,8 @@ class ClassifierContratacion(CLassifier):
                 os.remove(os.path.join(self.source_folder, file))
                 logging.debug(f"Deleted file {file} from {self.source_folder}")
 
-class ClassifierAnuncio(CLassifier):
-    def __init__(self, source_folder):
+class ClassifierAnuncio(Classifier):
+    def __init__(self, source_folder, log_dir):
         logging.debug(f"ClassifierAnuncio for {source_folder}")
 
         pattern_contratacion = r'Anuncio de formalización'
@@ -110,8 +110,8 @@ class ClassifierAnuncio(CLassifier):
         # Number of files in target folder. It needs to be calculated after the filtering because the target folder is created in the parent class
         self.num_anuncio_pdfs = len(os.listdir(target_folder))
 
-class ClassifierFormalizacion(CLassifier):
-    def __init__(self, source_folder):
+class ClassifierFormalizacion(Classifier):
+    def __init__(self, source_folder, log_dir):
         logging.debug(f"ClassifierFormalizacion for {source_folder}")
 
         pattern_contratacion = r'Formalización del contrato'
