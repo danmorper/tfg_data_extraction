@@ -4,7 +4,6 @@ import json
 import time
 from tools.data_loader import PDFReader
 from tools.data_extractors import DataExtractor
-from samplers.model_randomizer import randomize_model
 import logging
 
 def main(mm_yyyy: str, sampled_files: list, log_dir: str):
@@ -38,7 +37,7 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
         pdf_dir = f"pdfs_range_{mm_yyyy}/formalizacion"
         start_time = time.time()  # Start time measurement
         # Select model
-        model = randomize_model(log_dir=log_dir)
+        model = 'phi3'
         try:
             pdf_path = os.path.join(pdf_dir, pdf)
             pdf_reader = PDFReader(pdf_path=pdf_path, log_dir=log_dir)
@@ -110,7 +109,7 @@ def main(mm_yyyy: str, sampled_files: list, log_dir: str):
 
     # Final save of JSON data
     try:
-        with open(txt_file_path, 'a') as file:  # Corrected file path
+        with open(txt_file_path, "a") as file:  # Corrected file path
             file.write("]")  # Close the JSON array
         logging.info("Final JSON data saved")
     except Exception as e:

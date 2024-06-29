@@ -41,7 +41,7 @@ class TramitacionData(BaseModel):
 
 # Define the DataExtractor class
 class DataExtractor:
-    def __init__(self, model = "llama3",api_key: str ='ollama', base_url="http://localhost:11434/v1", text_company: str = None, text_amount: str = None, text_adjudicadora: str = None, text_tipo: str = None, text_tramitacion: str = None, log_dir: str = "None"):
+    def __init__(self, model = "phi3",api_key: str ='ollama', base_url="http://localhost:11434/v1", text_company: str = None, text_amount: str = None, text_adjudicadora: str = None, text_tipo: str = None, text_tramitacion: str = None, log_dir: str = "None"):
         # Setup logging
         setup_logging(log_dir, 'data_extractor.log')
         logging.debug(f"Initializing DataExtractor with model: {model}")
