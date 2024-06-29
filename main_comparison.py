@@ -15,7 +15,7 @@ from classifier.cpv import remove_invalid_pdfs_in_formalizacion_folder
 import pandas as pd
 
 import time
-
+import random
 # Create log directory
 import os
 from datetime import datetime
@@ -43,7 +43,8 @@ end_year = int(input("Enter end year: "))
 # List of months in the format mm-yyyy
 list_mm_yyyy = [f"{mm_yyyy:02d}-{year}" for year in range(start_year, end_year+1) for mm_yyyy in range(1, 13)] # List of months in the format mm-yyyy
 num_files = 300 # Number of files to sample
-
+# set seed for reproducibility
+random.seed(2000)
 # First create folders, download and classify files
 for mm_yyyy in list_mm_yyyy:
     # check if mm_yyyy is in data/comparison.csv
