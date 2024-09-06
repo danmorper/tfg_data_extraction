@@ -14,7 +14,7 @@ This project aims to download, classify, sample, and extract data from PDF docum
 
 The project automates the process of downloading PDF files from a specific source, classifying the files into relevant categories, sampling them for further processing, and extracting specific data. As shown in the image below, it transforms unstructured data from the Boletín Oficial del Estado (commonly known as BOE, the Spanish State Gazette) into structured data in CSV format.
 
-![PDF to Data Transformation](images/pdf_to_data.png)
+![PDF to Data Transformation](images/pdf_to_csv.png)
 
 ## Project Structure
 ```verbatim
