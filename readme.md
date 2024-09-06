@@ -8,9 +8,8 @@ This project aims to download, classify, sample, and extract data from PDF docum
 - [Project Structure](#project-structure)
 - [Workflow](#workflow)
 - [Script Details](#script-details)
-- [Usage Instructions](#usage-instructions)
 - [Stored Data](#stored-data)
-- 
+
 ## Overview
 
 The project automates the process of downloading PDF files from a specific source, classifying the files into relevant categories, sampling files for further processing, and extracting specific data from the PDF files.
@@ -288,7 +287,30 @@ The pipeline consists of the following main steps:
 
 ## Stored data
 
-- `formalizacion_data.csv`: main csv that will be used for data analysis.
+- `formalizacion_data.csv`: main CSV that will be used for data analysis.
 - `formalizacion_data.txt`: it stores all the values in the previous CSV along with the text from which data was extracted in order to validate its consistency
 - `fail_downloads.json`: unsuccessful HTTP requests to https://boe.es
+- download_time.csv: records the time taken to download PDFs, the number of requests made, and the number of PDFs downloaded each month or year.
 - `classify_time.csv`: time and number of files per month and per type of document.
+
+Here’s a sample of the extracted data from the `formalizacion_data.csv`:
+```csv
+pdf,mm_yyyy,company,amount,currency,adjudicadora,tipo,tramitacion,procedimiento,model,time
+BOE-B-2016-1394.pdf,01-2016,Prosegur España S.L.,1497980.0,euros,Universidad de Vigo,Servicios,Ordinaria,Abierto,phi3,224.87
+```
+
+`download_time.csv`: 
+```csv
+start_date,end_date,mm_yyyy,number_requests,number_pdfs,time,execution_date
+01-01-2016,31-01-2016,01-2016,3795,3785,4886.131931304932,12-06-2024 09:04:41
+01-02-2016,29-02-2016,02-2016,5451,5437,6968.896127939224,12-06-2024 10:31:24
+01-03-2016,31-03-2016,03-2016,5826,5804,8342.469424009323,12-06-2024 12:48:58
+01-04-2016,30-04-2016,04-2016,6932,6908,9611.083174467087,12-06-2024 15:12:19
+```
+`classify_time.csv`:
+```csv
+mm_yyyy,num_all_pdfs,time_contratacion,num_contratacion_pdfs,time_anuncio,num_anuncio_pdfs,time_formalizacion,num_formalizacion_pdfs,execution_date
+01-2016,3785,268.7725157737732,1394,23.74293851852417,205,20.3095121383667,536,2024-06-12 10:30:36
+02-2016,5437,1237.3495962619781,1468,23.2358181476593,152,20.825373888015747,507,2024-06-12 12:48:10
+03-2016,5804,206.02447605133057,1555,25.503661155700684,118,23.852322816848755,415,2024-06-12 15:11:26
+```
